@@ -1,19 +1,8 @@
 from os import getenv
 import logging
 from typing import Dict
+from version import TG_VER # Проверка совместимости
 
-from telegram import __version__ as TG_VER
-try:
-    from telegram import __version_info__
-except ImportError:
-    __version_info__ = (0, 0, 0, 0, 0)  # type: ignore[assignment]
-
-if __version_info__ < (20, 0, 0, "alpha", 1):
-    raise RuntimeError(
-        f"This example is not compatible with your current PTB version {TG_VER}. To view the "
-        f"{TG_VER} version of this example, "
-        f"visit https://docs.python-telegram-bot.org/en/v{TG_VER}/examples.html"
-    )
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
     Application,
@@ -34,7 +23,7 @@ logger = logging.getLogger(__name__)
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
 
 reply_keyboard = [
-    ["Age", "Favourite colour"],
+    ["Promt string", "Favourite colour"],
     ["Number of siblings", "Something else..."],
     ["Done"],
 ]
@@ -137,7 +126,7 @@ def main() -> None:
         states={
             CHOOSING: [
                 MessageHandler(
-                    filters.Regex("^(Age|Favourite colour|Number of siblings)$"), regular_choice
+                    filters.Regex("^(prompts|iterations|strength )$"), regular_choice
                 ),
                 MessageHandler(filters.Regex("^Something else...$"), custom_choice),
             ],
